@@ -33,6 +33,7 @@ let currentScreen = 0; // Track the current screen index
 // Define colors for background transition
 let startColor;
 let endColor;
+let filledColor;
 
 function preload() {
   // Load the alarm sound from the assets folder
@@ -57,6 +58,7 @@ function setup() {
   // Initialize start and end colors
   startColor = color(255, 0, 0); // Red
   endColor = color(0, 0, 255); // Blue
+  filledColor = color(255, 0, 0)//Red
 }
 
 function draw() {
@@ -150,11 +152,30 @@ function showCategoryLevelsScreen() {
   button.show(); // Show the continue button
 }
 
+let filledColors = []; // Array to store filled colors for each screen
+
 function drawLevelBar(level, x, y, label) {
   // Draw a bar representing the level (out of 100)
   fill(200); // Empty bar color
   rect(x, y, 200, 30); // Empty bar
-  fill(0, 255, 0); // Filled bar color
+
+  // Set the filled color to be more green based on the level decrease from the previous screen
+  if (currentScreen === 0) {
+    filledColors[currentScreen] = color(255, 0, 0); // Start with red color for the first screen
+  } else {
+    let prevLevel = categoryScreens[currentScreen - 1][label.toLowerCase()];
+    let change = prevLevel - level; // Find how much the level has decreased
+    let percentageChange = map(change, 0, 20, 0, 1); // Scale change to 0-1 for color adjustment
+    percentageChange = constrain(percentageChange, 0, 1); // Constrain to the range [0, 1]
+    percentageChange *= 0.7;
+
+    // Use lerpColor to smoothly transition from red to green
+    let startColor = filledColors[currentScreen - 1]; // previous color
+    let endColor = color(0, 255, 0); // Green
+    filledColors[currentScreen] = lerpColor(startColor, endColor, percentageChange); // Interpolate color
+  }
+
+  fill(filledColors[currentScreen]); // Apply the stored filled color
   rect(x, y, level * 2, 30); // Filled portion based on the level
 
   // Display the numerical value next to the bar
@@ -169,13 +190,15 @@ function drawLevelBar(level, x, y, label) {
     let change = level - prevLevel;
     let changeText = (change / 20).toFixed(2); // Convert back to 5-point scale
     let sign = change >= 0 ? "+" : ""; // Add "+" for positive changes
-    
-    
+
     text("(" + sign + changeText + ")", x + 250, y + 15); // Display the change
   } else {
     text("(N/A)", x + 250, y + 15); // No change for the first screen
   }
 }
+
+
+
 
 function continueClock() {
   // Move to the next screen or show end screen if it's the last one
