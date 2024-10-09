@@ -30,5 +30,12 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    // Switch Tabs Function
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+        document.getElementById(tabName).style.display = 'block';
+    }
+  </script>
 </body>
 </html>

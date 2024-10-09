@@ -1,5 +1,5 @@
 // Function to fetch and parse CSV data
-async function fetchDataScatter() {
+async function fetchDataHistogram() {
     const response = await fetch('MentalHealthSurvey.csv');
     const data = await response.text();
     
@@ -16,7 +16,7 @@ async function fetchDataScatter() {
 }
 
 // Function to fetch and parse CSV data
-async function fetchData() {
+async function fetchDataScatter() {
     const response = await fetch('MentalHealthSurvey.csv');
     const data = await response.text();
 
@@ -35,7 +35,7 @@ async function fetchData() {
 
 // Function to create Chart.js scatter plot
 async function createFirstScatterChart() {
-    const dataPoints = await fetchData();
+    const dataPoints = await fetchDataScatter();
 
     const ctx = document.getElementById('scatterPlot').getContext('2d');
     new Chart(ctx, {
@@ -71,30 +71,76 @@ async function createFirstScatterChart() {
     });
 }
 
-async function createHisgoramChart () {
-    const dataPoints = await fetchDataScatter();
-    console.log(`dataPoints: ${dataPoints}`);
+// Function to create histogram data
+function createHistogramData(data, numBins) {
+    // Define the range and bin width
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const binWidth = (max - min) / numBins;
 
-    
-    var ctx = document.getElementById("histogram").getContext('2d');
-var dataValues = [12, 19, 3, 5];
-var dataLabels = [0, 2, 4, 16];
-var myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: dataLabels,
-    datasets: [{
-      label: 'Group A',
-      data: dataPoints["average_sleep"],
-      backgroundColor: 'rgba(255, 99, 132, 1)',
-    }]
-  },
-})
-};
+    // Create bins and count frequencies
+    const bins = Array(numBins).fill(0);
+    data.forEach(value => {
+        const binIndex = Math.min(
+            numBins - 1,
+            Math.floor((value - min) / binWidth)
+        );
+        bins[binIndex]++;
+    });
+
+    // Create labels for each bin
+    const labels = bins.map((_, i) => {
+        const binStart = (min + i * binWidth).toFixed(1);
+        const binEnd = (min + (i + 1) * binWidth).toFixed(1);
+        return `${binStart} - ${binEnd}`;
+    });
+
+    return { labels, bins };
+}
+
+// Function to create Chart.js histogram
+async function createHistogram() {
+    const sleepData = await fetchDataHistogram();
+    const sleepHours = sleepData.map(d => d.x);
+    const numBins = 5; // Adjust the number of bins as needed
+    const histogramData = createHistogramData(sleepHours, numBins);
+
+    const ctx = document.getElementById('histogram').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: histogramData.labels,
+            datasets: [{
+                label: 'Frequency of Average Sleep',
+                data: histogramData.bins,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Average Sleep (hours)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Frequency'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
 // Call the function to create the plot chart
 createFirstScatterChart();
 
 
-// Create how to do node.js to fingo
-createHisgoramChart();
+// Call the function to create the histogram
+createHistogram();
