@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Visualizations</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-button" onclick="showTab('visualizations')">Analytical and Informative</button>
+      <button class="tab-button" onclick="showTab('persuasion')">Persuasion</button>
+    </div>
+
+    <div id="visualizations" class="tab-content">
+      <h2>Analytical and Informative</h2>
+      <p>Alp's Visualizations.</p>
+      <canvas id="scatterPlot" width="600" height="400"></canvas>
+      <canvas id="histogram"></canvas>
+    </div>
+
+    <div id="persuasion" class="tab-content" style="display:none;">
+      <h2>Persuasion</h2>
+      <p>Seth's Visualizations.</p>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
