@@ -40,10 +40,27 @@ async function fetchDataScatter2() {
 
     // Parse the CSV data
     const parsedData = data.split('\n').slice(1).map(row => {
-        const [sports_engagement, academic_pressure] = [row.split(',')[10], row.split(',')[5]];
+        const [sports_engagement, depression] = [row.split(',')[9], row.split(',')[16]];
         return {
             x: parseFloat(sports_engagement),
-            y: parseFloat(academic_pressure)
+            y: parseFloat(depression)
+        };
+    });
+
+    return parsedData;
+}
+
+// Function to fetch and parse CSV data
+async function fetchDataScatter21() {
+    const response = await fetch('MentalHealthSurvey.csv');
+    const data = await response.text();
+
+    // Parse the CSV data
+    const parsedData = data.split('\n').slice(1).map(row => {
+        const [sports_engagement, cgpa] = [row.split(',')[9], row.split(',')[5]];
+        return {
+            x: parseFloat(sports_engagement),
+            y: parseFloat(cgpa)
         };
     });
 
@@ -82,6 +99,54 @@ async function createFirstScatterChart() {
                     title: {
                         display: true,
                         text: 'CGPA'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+// Function to create Chart.js scatter plot
+async function createSecondScatterChart() {
+    const dataPoints = await fetchDataScatter2();
+    const otherDataPoints = await fetchDataScatter21(); 
+
+    const ctx = document.getElementById('alp-scatterPlot2').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: 'Sports Engagement vs. Depression',
+                data: dataPoints,
+                backgroundColor: 'rgba(75, 192, 75, 0.13)',
+                borderColor: 'rgba(75, 192, 75, 1)',
+                borderWidth: 1,
+                pointRadius: 3
+            }, 
+            {
+                label: 'Sports Engagement vs. CGPA',
+                data: otherDataPoints,
+                backgroundColor: 'rgba(0, 0, 0, 0.13)',
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1,
+                pointRadius: 3
+            } ]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Sports Engagement (times/week)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Depression Score and CGPA'
                     }
                 }
             }
@@ -158,6 +223,10 @@ async function createHistogram() {
 
 // Call the function to create the plot chart
 createFirstScatterChart();
+
+
+// Call the function to create the plot chart
+createSecondScatterChart();
 
 
 // Call the function to create the histogram
