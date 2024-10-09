@@ -196,8 +196,8 @@ async function createHistogram() {
             datasets: [{
                 label: 'Frequency of Average Sleep',
                 data: histogramData.bins,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1
             }]
         },

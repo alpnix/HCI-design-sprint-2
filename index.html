@@ -11,13 +11,12 @@
 <body>
   <div class="container">
     <div class="tabs">
-      <button class="tab-button" onclick="showTab('visualizations')">Analytical and Informative</button>
-      <button class="tab-button" onclick="showTab('persuasion')">Persuasion</button>
+      <button class="tab-button" onclick="showTab('analytical')">Analytical and Informative</button>
+      <button class="tab-button" onclick="showTab('persuasive')">Persuasion</button>
     </div>
 
-    <div id="analytical" class="tab-content">
+    <div id="analytical" class="tab-content" style="display:block;">
       <h2>Analytical and Informative</h2>
-      <p>Alp's Visualizations.</p>
       <canvas id="alp-scatterPlot" width="600" height="400"></canvas>
       <br>
       <canvas id="alp-scatterPlot2" width="600" height="400"></canvas>
@@ -28,16 +27,23 @@
 
     <div id="persuasive" class="tab-content" style="display:none;">
       <h2>Persuasive</h2>
-      <p>Seth's Visualizations.</p>
-
+      <main>
+    </main>
     </div>
   </div>
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/addons/p5.sound.min.js"></script>
   <script src="script.js"></script>
-  <script>
+  <script src="sketch.js"></script>
+  <script defer>
     // Switch Tabs Function
     function showTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        }); 
         document.getElementById(tabName).style.display = 'block';
     }
   </script>
