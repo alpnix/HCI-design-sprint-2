@@ -16,6 +16,39 @@ async function fetchDataHistogram() {
 }
 
 // Function to fetch and parse CSV data
+async function fetchDataMultiLine() {
+    const response = await fetch('MentalHealthSurvey.csv');
+    const data = await response.text();
+
+    // Parse the CSV data
+    const parsedData = data.split('\n').slice(1).map(row => {
+        const [study_satisfaction,academic_workload,academic_pressure,financial_concerns,social_relationships,depression,anxiety,isolation,future_insecurity] = [11,12,13,14,15,16,17,18,19].forEach(num => row.split(',')[num]);
+        return [{
+            x: parseFloat(financial_concerns),
+            y: parseFloat(study_satisfaction)
+        }, 
+        {
+            x: parseFloat(financial_concerns),
+            y: parseFloat(academic_workload)
+        }, 
+        {
+            x: parseFloat(financial_concerns),
+            y: parseFloat(academic_pressure)
+        }, 
+        {
+            x: parseFloat(financial_concerns),
+            y: parseFloat(social_relationships)
+        }, 
+        {
+            x: parseFloat(financial_concerns),
+            y: parseFloat(anxiety)
+        }];
+    });
+
+    return parsedData;
+}
+
+// Function to fetch and parse CSV data
 async function fetchDataScatter() {
     const response = await fetch('MentalHealthSurvey.csv');
     const data = await response.text();
@@ -108,7 +141,7 @@ async function createFirstScatterChart() {
 
 
 // Function to create Chart.js scatter plot
-async function createSecondScatterChart() {
+async function createBarChart() {
     const dataPoints = await fetchDataScatter2();
     const otherDataPoints = await fetchDataScatter21(); 
 
@@ -221,13 +254,67 @@ async function createHistogram() {
     });
 }
 
+
+// Function to create Chart.js multi-line chart
+async function createMultiLineChart() {
+    const dataPoints = await fetchDataMultiLine();
+    console.log(dataPoints);
+    const ctx = document.getElementById('alp-lineplot').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Sports Engagement vs. Depression',
+                data: dataPoints,
+                backgroundColor: 'rgba(75, 192, 75, 0.13)',
+                borderColor: 'rgba(75, 192, 75, 1)',
+                borderWidth: 1,
+                pointRadius: 3
+            }, 
+            {
+                label: 'Sports Engagement vs. CGPA',
+                data: otherDataPoints,
+                backgroundColor: 'rgba(0, 0, 0, 0.13)',
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1,
+                pointRadius: 3
+            } ]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Sports Engagement (times/week)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Depression Score and CGPA'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+
+
+// Call the function to create the histogram
+createHistogram();
+
+
 // Call the function to create the plot chart
 createFirstScatterChart();
 
 
 // Call the function to create the plot chart
-createSecondScatterChart();
+createBarChart();
 
 
-// Call the function to create the histogram
-createHistogram();
+// Call the function to create multi-line chart
+createMultiLineChart();
