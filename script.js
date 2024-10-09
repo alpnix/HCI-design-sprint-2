@@ -8,7 +8,7 @@ async function fetchDataHistogram() {
     const parsedData = data.split('\n').slice(1).map(row => {
         const average_sleep =row.split(',')[10];
         return {
-            x: parseFloat(average_sleep),
+            x: parseInt(average_sleep),
         };
     });
 
@@ -22,26 +22,26 @@ async function fetchDataMultiLine() {
 
     // Parse the CSV data
     const parsedData = data.split('\n').slice(1).map(row => {
-        const [study_satisfaction,academic_workload,academic_pressure,financial_concerns,social_relationships,depression,anxiety,isolation,future_insecurity] = [11,12,13,14,15,16,17,18,19].forEach(num => row.split(',')[num]);
+        const [study_satisfaction,academic_workload,academic_pressure,financial_concerns,social_relationships,depression,anxiety,isolation,future_insecurity] = [11,12,13,14,15,16,17,18,19].map(num => row.split(',')[num]);
         return [{
-            x: parseFloat(financial_concerns),
-            y: parseFloat(study_satisfaction)
+            x: parseInt(financial_concerns),
+            y: parseInt(study_satisfaction)
         }, 
         {
-            x: parseFloat(financial_concerns),
-            y: parseFloat(academic_workload)
+            x: parseInt(financial_concerns),
+            y: parseInt(academic_workload)
         }, 
         {
-            x: parseFloat(financial_concerns),
-            y: parseFloat(academic_pressure)
+            x: parseInt(financial_concerns),
+            y: parseInt(academic_pressure)
         }, 
         {
-            x: parseFloat(financial_concerns),
-            y: parseFloat(social_relationships)
+            x: parseInt(financial_concerns),
+            y: parseInt(social_relationships)
         }, 
         {
-            x: parseFloat(financial_concerns),
-            y: parseFloat(anxiety)
+            x: parseInt(financial_concerns),
+            y: parseInt(anxiety)
         }];
     });
 
@@ -57,8 +57,8 @@ async function fetchDataScatter() {
     const parsedData = data.split('\n').slice(1).map(row => {
         const [average_sleep, cgpa] = [row.split(',')[10], row.split(',')[5]];
         return {
-            x: parseFloat(average_sleep),
-            y: parseFloat(cgpa)
+            x: parseInt(average_sleep),
+            y: parseInt(cgpa)
         };
     });
 
@@ -75,8 +75,8 @@ async function fetchDataScatter2() {
     const parsedData = data.split('\n').slice(1).map(row => {
         const [sports_engagement, depression] = [row.split(',')[9], row.split(',')[16]];
         return {
-            x: parseFloat(sports_engagement),
-            y: parseFloat(depression)
+            x: parseInt(sports_engagement),
+            y: parseInt(depression)
         };
     });
 
@@ -146,6 +146,7 @@ async function createBarChart() {
     const otherDataPoints = await fetchDataScatter21(); 
 
     const ctx = document.getElementById('alp-scatterPlot2').getContext('2d');
+    
     new Chart(ctx, {
         type: 'bar',
         data: {
@@ -260,40 +261,65 @@ async function createMultiLineChart() {
     const dataPoints = await fetchDataMultiLine();
     console.log(dataPoints);
     const ctx = document.getElementById('alp-lineplot').getContext('2d');
+
+    const firstDataset = dataPoints.map(data => {
+        return data[0]
+    });
+
+    const secondDataset = dataPoints.map(data => {
+        return data[1]
+    });
+
+    const thirdDataset = dataPoints.map(data => {
+        return data[2]
+    });
+
+
+    console.log(firstDataset);
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             datasets: [{
-                label: 'Sports Engagement vs. Depression',
-                data: dataPoints,
-                backgroundColor: 'rgba(75, 192, 75, 0.13)',
-                borderColor: 'rgba(75, 192, 75, 1)',
+                label: 'Study Satisfaction',
+                data: firstDataset,
+                backgroundColor: 'rgba(125, 48, 53, 1)',
+                borderColor: 'rgba(125, 48, 53, 1)',
                 borderWidth: 1,
                 pointRadius: 3
             }, 
             {
-                label: 'Sports Engagement vs. CGPA',
-                data: otherDataPoints,
-                backgroundColor: 'rgba(0, 0, 0, 0.13)',
-                borderColor: 'rgba(0, 0, 0, 1)',
+                label: 'Academic Workload',
+                data: secondDataset,
+                backgroundColor: 'rgba(200, 15, 140, 1)',
+                borderColor: 'rgba(200, 15, 140, 1)',
                 borderWidth: 1,
                 pointRadius: 3
-            } ]
+            }, 
+            {
+                label: 'Academic Pressure',
+                data: thirdDataset,
+                backgroundColor: 'rgba(25, 130, 200, 1)',
+                borderColor: 'rgba(25, 130, 200, 1)',
+                borderWidth: 1,
+                pointRadius: 3
+            }]
         },
         options: {
             scales: {
                 x: {
                     type: 'linear',
+                    stacked: true, 
                     position: 'bottom',
                     title: {
                         display: true,
-                        text: 'Sports Engagement (times/week)'
+                        text: 'Financial Concern Score'
                     }
                 },
                 y: {
+                    stacked: true, 
                     title: {
                         display: true,
-                        text: 'Depression Score and CGPA'
+                        text: 'How students feel about their studies'
                     }
                 }
             }
