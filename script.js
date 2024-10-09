@@ -33,11 +33,29 @@ async function fetchDataScatter() {
 }
 
 
+// Function to fetch and parse CSV data
+async function fetchDataScatter2() {
+    const response = await fetch('MentalHealthSurvey.csv');
+    const data = await response.text();
+
+    // Parse the CSV data
+    const parsedData = data.split('\n').slice(1).map(row => {
+        const [sports_engagement, academic_pressure] = [row.split(',')[10], row.split(',')[5]];
+        return {
+            x: parseFloat(sports_engagement),
+            y: parseFloat(academic_pressure)
+        };
+    });
+
+    return parsedData;
+}
+
+
 // Function to create Chart.js scatter plot
 async function createFirstScatterChart() {
     const dataPoints = await fetchDataScatter();
 
-    const ctx = document.getElementById('scatterPlot').getContext('2d');
+    const ctx = document.getElementById('alp-scatterPlot').getContext('2d');
     new Chart(ctx, {
         type: 'scatter',
         data: {
@@ -105,7 +123,7 @@ async function createHistogram() {
     const numBins = 5; // Adjust the number of bins as needed
     const histogramData = createHistogramData(sleepHours, numBins);
 
-    const ctx = document.getElementById('histogram').getContext('2d');
+    const ctx = document.getElementById('alp-histogram').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
         data: {
