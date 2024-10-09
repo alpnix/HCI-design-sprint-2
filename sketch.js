@@ -44,13 +44,13 @@ function setup() {
   createCanvas(480, 480);
   frameRate(30); // Control frame rate
   button = createButton('Continue');
-  button.position(width / 2 - 50, height / 2 + 160);
+  button.position(width / 2 - 50, height);
   button.size(100, 40);
   button.hide(); // Initially hide the button
   button.mousePressed(continueClock); // Attach button action
 
   restartButton = createButton('Restart');
-  restartButton.position(width / 2 - 50, height / 2 + 160);
+  restartButton.position(width / 2 - 50, height);
   restartButton.size(100, 40);
   restartButton.hide(); // Initially hide the restart button
   restartButton.mousePressed(restartClock); // Attach restart action
