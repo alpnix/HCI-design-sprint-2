@@ -39,14 +39,31 @@
 
 
     <script src="script.js"></script>
-    <script src="sketch.js"></script>
-    <script defer>
+    <script src="persuasion.js"></script> 
+    <script>
     // Switch Tabs Function
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.style.display = 'none';
         }); 
         document.getElementById(tabName).style.display = 'block';
+        if (tabName === 'persuasive') {
+            console.log("Persuasion");
+            // var script = document.createElement('script');
+            // script.setAttribute('type', 'text/javascript');
+            // script.setAttribute('src', 'persuasion.js');
+            // document.body.appendChild(script);
+        }
+        if (tabName === "analytical") {
+            const absoluteButtons = document.querySelectorAll('body>button');
+            console.log(absoluteButtons);
+            absoluteButtons.forEach(button => {
+                button.style.display = 'none';
+            });
+            console.log("Analytical");
+            
+        }
+
     }
     </script>
 </body>
